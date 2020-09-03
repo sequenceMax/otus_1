@@ -1,11 +1,10 @@
 package ru.otus.drive.dao.impl
 
 import ru.otus.drive.dao.CarDAO
-import ru.otus.drive.models.{Car, Lada, Toyota}
+import ru.otus.drive.models._
 
 class CarDAOImpl extends CarDAO {
-  override val getCar: String => Car = {
-    case Toyota.name =>  Toyota
-    case Lada.name => Lada
-  }
+  override def carByName(name: String): Option[Car] = cars.find(_.name == name)
+
+  override var cars: List[Car] = Car.initData
 }

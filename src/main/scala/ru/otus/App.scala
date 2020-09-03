@@ -7,7 +7,8 @@ import ru.otus.counter.model.{RequestWithCounter, ResponseWithCounter}
 import ru.otus.counter.service.CounterService
 import ru.otus.counter.service.impl.CounterServiceImpl
 import ru.otus.drive.dao.impl.CarDAOImpl
-import ru.otus.drive.models.{RequestWithCar, ResponseWithCar}
+import ru.otus.drive.models.request.{RequestMode, RequestWithCar}
+import ru.otus.drive.models.response.ResponseWithCar
 import ru.otus.drive.service.DriveService
 import ru.otus.drive.service.impl.DriveServiceImpl
 import ru.otus.echo.model.{RequestWithEcho, ResponseWithEcho}
@@ -49,15 +50,33 @@ object AppGreat {
  * Пример запуска:
  * import ru.otus.AppDrive
  * val appDrive = AppDrive()
- * import ru.otus.drive.models.RequestWithCar
- * val driveRequest = RequestWithCar("toyota")
+ * import ru.otus.drive.models.request.RequestWithCar
+ * import ru.otus.drive.models.request.RequestMode._
+ * val driveRequest = RequestWithCar(ReadAll)
  * appDrive.route(driveRequest)
  */
 object AppDrive {
   private class AppDriveImpl(val service: DriveService) extends AppController[RequestWithCar, ResponseWithCar] {
     override def route(request: RequestWithCar): ResponseWithCar = {
-      val driving = service.drive(request.carName)
-      ResponseWithCar(driving)
+      val response = request.requestMode match {
+        case RequestMode.Create =>
+          request.carO.map(service.create).toString
+        case RequestMode.ReadOne =>
+          request.carNameO.flatMap(service.byName).toString
+        case RequestMode.ReadAll =>
+          service.cars.toString
+        case RequestMode.Update =>
+          request.carO.map(service.updateOrCreate).toString
+        case RequestMode.UpdateWheelsOnTheCar =>
+          request.carNameO
+            .map(carName  =>
+              service.updateWheelsOnTheCar(request.wheels, carName)
+                .fold(identity, _.toString)
+            ).toString
+        case RequestMode.Delete =>
+          request.carNameO.map(service.delete).toString
+      }
+      ResponseWithCar(response)
     }
   }
 

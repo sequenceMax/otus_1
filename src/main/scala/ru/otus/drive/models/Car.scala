@@ -1,52 +1,68 @@
 package ru.otus.drive.models
 
-sealed abstract class Car(val name: String) {
-  val picture: String
+case class Car(
+  name: String,
+  onBoardComputerO: Option[OnBoardComputer],
+  wheels: List[Wheel]
+) {
+  def withWheels(wheels: List[Wheel]): Car = copy(
+    wheels = wheels
+  )
 }
 
-case object Toyota extends Car("toyota") {
-  override lazy val picture: String =
-    """
-      |_____________________________$$$$$$$$$$$$$$$$$$$$$$$
-      |____________________________$$$$$_____$$_____$$____$$
-      |__________________________$$$$$_______$$______$$____$$
-      |________________________$$$$$_________$$_______$$____$$
-      |_____________________$$$$$____________$$________$$____$$
-      |_______________$$$$$$$$$$$$$$$$$$$$$$$$$_________$$____$$
-      |_________$$$$$$________$$_____________$$__________$$$$$$$$
-      |____$$$$$$_____________$$_____________$$_________________$$
-      |__$$___________________$$_____________$$_________________$$
-      |__$$________$$$$$______$$_____________$$________$$$$$____$$
-      |__$$______$$$$$$$$$____$$_____________$$______$$$$$$$$$___$$
-      |__$$$$$_$$$$_____$$$_$$$$$$$$$$$$$$$$$$$$$$__$$$$____$$$__$$
-      |________$$$$_____$$$_________________________$$$$____$$$$
-      |_________$$$$____$$$_________________________$$$$$___$$$$
-      |__________$$$$$_$$$___________________________$$$$$$_$$$
-      |____________$$$$$$_______________________________$$$$$$
-      |"""
-}
-
-case object Lada extends Car("lada") {
-  override lazy val picture: String =
-    """
-      |________$________
-      |_______$_$_______
-      |______$___$______
-      |_____$_____$_____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |____$_______$____
-      |___$__$___$__$___
-      |__$__$_$_$_$__$__
-      |_$__$__$$$__$__$_
-      |_$$$____$____$$$_
-      |_$______$______$_
-      |$_______$_______$
-      |"""
+object Car {
+  def initData: List[Car] = {
+    List(
+      Car(
+        name = "toyota",
+        onBoardComputerO = Some(
+          OnBoardComputer(
+            cruiseControl = true,
+            fuelСonsumption = true
+          )
+        ),
+        wheels = List(
+          Wheel(name = "Wheel1"),
+          Wheel(name = "Wheel5"),
+          Wheel(name = "Wheel2"),
+          Wheel(name = "Wheel3")
+        )
+      ),
+      Car(
+        name = "lada",
+        onBoardComputerO = Some(
+          OnBoardComputer(
+            cruiseControl = false,
+            fuelСonsumption = true
+          )
+        ),
+        wheels = List(
+          Wheel(name = "Wheel1"),
+          Wheel(name = "Wheel3"),
+          Wheel(name = "Wheel1"),
+          Wheel(name = "Wheel3")
+        )
+      ),
+      Car(
+        name = "mazda",
+        onBoardComputerO = Some(
+          OnBoardComputer(
+            cruiseControl = true,
+            fuelСonsumption = false
+          )
+        ),
+        wheels = List(
+          Wheel(name = "Wheel4"),
+          Wheel(name = "Wheel2"),
+          Wheel(name = "Wheel5"),
+          Wheel(name = "Wheel2")
+        )
+      ),
+      Car(
+        name = "ford",
+        onBoardComputerO = None,
+        wheels = List.empty
+      )
+    )
+  }
 }
